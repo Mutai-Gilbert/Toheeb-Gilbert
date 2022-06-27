@@ -1,10 +1,26 @@
-#include <bits/stdc++.h>
+'use strict';
 
-using namespace std;
+const fs = require('fs');
 
-string ltrim(const string &);
-string rtrim(const string &);
-vector<string> split(const string &);
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString = '';
+let currentLine = 0;
+
+process.stdin.on('data', function(inputStdin) {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function() {
+    inputString = inputString.split('\n');
+
+    main();
+});
+
+function readLine() {
+    return inputString[currentLine++];
+}
 
 /*
  * Complete the 'serviceLane' function below.
@@ -15,105 +31,26 @@ vector<string> split(const string &);
  *  2. 2D_INTEGER_ARRAY cases
  */
 
-vector<int> serviceLane(int n, vector<vector<int>> cases) {
+function serviceLane(n, cases) {
+    // Write your code here
+    const arr = []; // declare the array
+    for (let i of cases){ //iterations
+        arr.push(Math.min(...n.slice(i[0],i[1]+1)));
+    }
+    return arr;
 
 }
 
-int main()
-{
-    ofstream fout(getenv("OUTPUT_PATH"));
 
-    string first_multiple_input_temp;
-    getline(cin, first_multiple_input_temp);
+// Modifications to main(), since the original code didn't pass the correct arguments to solve the algorithm
+function main() {
+    const ws = fs.createWriteStream(process.env.OUTPUT_PATH)
 
-    vector<string> first_multiple_input = split(rtrim(first_multiple_input_temp));
+    const [n, t] = [...readLine().split(' ')].map(x => parseInt(x, 10))
+    const width = readLine().split(' ').map(x => parseInt(x, 10))
+    const cases = Array(t).fill(0).map(x => readLine().split(' ').map(y => parseInt(y, 10)))
+    let result = serviceLane(width, cases)
 
-    int n = stoi(first_multiple_input[0]);
-
-    int t = stoi(first_multiple_input[1]);
-
-    string width_temp_temp;
-    getline(cin, width_temp_temp);
-
-    vector<string> width_temp = split(rtrim(width_temp_temp));
-
-    vector<int> width(n);
-
-    for (int i = 0; i < n; i++) {
-        int width_item = stoi(width_temp[i]);
-
-        width[i] = width_item;
-    }
-
-    vector<vector<int>> cases(t);
-
-    for (int i = 0; i < t; i++) {
-        cases[i].resize(2);
-
-        string cases_row_temp_temp;
-        getline(cin, cases_row_temp_temp);
-
-        vector<string> cases_row_temp = split(rtrim(cases_row_temp_temp));
-
-        for (int j = 0; j < 2; j++) {
-            int cases_row_item = stoi(cases_row_temp[j]);
-
-            cases[i][j] = cases_row_item;
-        }
-    }
-
-    vector<int> result = serviceLane(n, cases);
-
-    for (size_t i = 0; i < result.size(); i++) {
-        fout << result[i];
-
-        if (i != result.size() - 1) {
-            fout << "\n";
-        }
-    }
-
-    fout << "\n";
-
-    fout.close();
-
-    return 0;
-}
-
-string ltrim(const string &str) {
-    string s(str);
-
-    s.erase(
-        s.begin(),
-        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
-    );
-
-    return s;
-}
-
-string rtrim(const string &str) {
-    string s(str);
-
-    s.erase(
-        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
-        s.end()
-    );
-
-    return s;
-}
-
-vector<string> split(const string &str) {
-    vector<string> tokens;
-
-    string::size_type start = 0;
-    string::size_type end = 0;
-
-    while ((end = str.find(" ", start)) != string::npos) {
-        tokens.push_back(str.substr(start, end - start));
-
-        start = end + 1;
-    }
-
-    tokens.push_back(str.substr(start));
-
-    return tokens;
+    ws.write(result.join("\n") + "\n")
+    ws.end()
 }
